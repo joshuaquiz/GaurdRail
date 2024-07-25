@@ -25,6 +25,12 @@ public class AccessPoint : IAddableItem, IAccountItem
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// The distance allowance of a user accessing the door.
+    /// </summary>
+    [Required]
+    public double DistanceAllowance { get; set; } = double.MaxValue;
+
+    /// <summary>
     /// The Guid of the <see cref="AccessPointGroup"/>, if there is one.
     /// </summary>
     public Guid? AccessPointGroupGuid { get; set; }

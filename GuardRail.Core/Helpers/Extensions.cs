@@ -96,14 +96,21 @@ public static class Extensions
         string.IsNullOrWhiteSpace(str);
 
     /// <summary>
+    /// Extension for IsNullOrEmpty.
+    /// </summary>
+    /// <param name="str">The value to use.</param>
+    /// <returns>bool</returns>
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str) =>
+        string.IsNullOrEmpty(str);
+
+    /// <summary>
     /// Gets the UTF8 encoded bytes from the provided text.
     /// </summary>
     /// <param name="str">The value to use.</param>
     /// <returns><see cref="byte"/>s</returns>
     public static byte[] GetBytes(this string? str) =>
-        str == null
-        || !str.Any()
-            ? Array.Empty<byte>()
+        str.IsNullOrEmpty()
+            ? []
             : Encoding.UTF8.GetBytes(str);
 
     /// <summary>

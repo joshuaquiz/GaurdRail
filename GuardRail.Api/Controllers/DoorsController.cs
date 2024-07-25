@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GuardRail.Api.Models;
+using GuardRail.ApiModels.Requests;
 using GuardRail.Core.Data;
 using GuardRail.Core.Data.Enums;
+using GuardRail.Core.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -75,5 +78,44 @@ public sealed class DoorsController : ControllerBase
         doorFromDatabase.DoorStateRequestType = DoorStateRequestType.UnLocked;
         await _guardRailContext.SaveChangesAsync();
         return Ok();
+    }
+
+    [Route(nameof(IsInGeoFence))]
+    [HttpPost]
+    public async Task<bool> IsInGeoFence(
+        [FromBody] GeoLocationRequest geoLocationRequest,
+        CancellationToken cancellationToken)
+    {
+        var doorFromDatabase = await _guardRailContext
+            .Doors
+            .Include(x => x.AccessPoint)
+            .SingleAsync(
+                x => x.Guid == geoLocationRequest.DoorId,
+                cancellationToken);
+        var distance = DistanceBetweenPoints(
+            geoLocationRequest.Latitude,
+            geoLocationRequest.Longitude,
+            doorFromDatabase.Latitude,
+            doorFromDatabase.Longitude);
+        return distance <= doorFromDatabase.AccessPoint.DistanceAllowance;
+    }
+
+    private const double EarthsRadiusInKilometers = 6371;
+
+    private static double DistanceBetweenPoints(
+        double fromLat,
+        double fromLong,
+        double toLat,
+        double toLong)
+    {
+        return (Math.PI / 180)
+               * (Math.Acos(
+                      Math.Sin(fromLat)
+                      * Math.Sin(toLat)
+                      + Math.Cos(fromLat)
+                      * Math.Cos(toLat)
+                      * Math.Cos(toLong - fromLong)
+                  )
+                  * EarthsRadiusInKilometers);
     }
 }

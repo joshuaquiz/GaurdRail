@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="GuardRail.Mobile.Client.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:GuardRail.Mobile.Client.Views">
+    <ShellContent ContentTemplate="{DataTemplate views:HomePage}" />
+</Shell>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GuardRail.Mobile.Client.Views.Login"
+             Shell.NavBarIsVisible="False"
+             Shell.PresentationMode="NotAnimated">
+    <Grid
+        RowDefinitions="*,10,50,5,50,5,50,30,50,10,*"
+        ColumnDefinitions="*,10,125,125,10,*">
+        <Image
+            Grid.Row="0"
+            Grid.RowSpan="11"
+            Grid.Column="0"
+            Grid.ColumnSpan="6"
+            Aspect="AspectFill"
+            Source="main_background" />
+        <Entry
+            x:Name="Username"
+            Grid.Row="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            FontSize="20"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Start"
+            Placeholder="Username" />
+        <Entry
+            x:Name="Password"
+            Grid.Row="4"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            FontSize="20"
+            FontAttributes="Bold"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Start"
+            Placeholder="Password" />
+        <Button
+            Grid.Row="6"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            FontSize="20"
+            FontAttributes="Bold"
+            Text="Log in"
+            Clicked="Button_OnClicked" />
+        <Label
+            Grid.Row="7"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Center"
+            Text="OR" />
+        <ImageButton
+            Grid.Row="8"
+            Grid.Column="2"
+            Source="google"
+            Clicked="Google_OnClicked" />
+        <ImageButton
+            Grid.Row="8"
+            Grid.Column="3"
+            Source="facebook"
+            Clicked="Facebook_OnClicked" />
+    </Grid>
+</ContentPage>

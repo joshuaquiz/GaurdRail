@@ -72,12 +72,12 @@ public sealed class RemoteDataSink : IDataSink
                 changesToPush.Add(item);
             }
         }
-            
+
         while (_concurrentQueue.TryDequeue(out var item))
         {
             changesToPush.Add(item);
         }
-            
+
         try
         {
             await _guardRailApiClient.UploadChangesAsync(changesToPush, ct);

@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
+using System.Device.I2c;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GuardRail.Core.Helpers;
+using GuardRail.DeviceLogic.Hardware.GuardRailIntegrated.Input.Nfc.NfcTools;
+using GuardRail.DeviceLogic.Hardware.GuardRailIntegrated.Input.Nfc.NfcTools.PInvoke;
 using GuardRail.DeviceLogic.Interfaces.Input.Nfc;
 using Iot.Device.Card.CreditCardProcessing;
 using Iot.Device.Card.Mifare;
 using Iot.Device.Common;
+using Iot.Device.FtCommon;
 using Iot.Device.Ndef;
 using Iot.Device.Pn532;
 using Iot.Device.Pn532.ListPassive;
+using ManagedLibnfc;
+using ManagedLibnfc.PInvoke;
 using Microsoft.Extensions.Logging;
 using TagList = Iot.Device.Card.CreditCardProcessing.TagList;
 
@@ -25,7 +34,7 @@ public sealed class NfcHardwareManager : INfcHardwareManager
     private readonly ILogger<NfcHardwareManager> _logger;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
-    private Pn532? _pn532;
+    private I2cBus? _i2CBus;
     private Task? _listener;
     private GpioController _gpioController;
 
@@ -46,239 +55,194 @@ public sealed class NfcHardwareManager : INfcHardwareManager
     public ValueTask InitAsync()
     {
         LogDispatcher.LoggerFactory = _loggerFactory;
-        _pn532 = new Pn532(_nfcConfiguration.SerialPort);
+        _i2CBus = I2cBus.Create(int.Parse(_nfcConfiguration.SerialPort));
         _listener = new TaskFactory()
-            .StartNew(
-                () =>
-                {
-                    while (!_cancellationTokenSource.IsCancellationRequested)
+            .StartNew(() =>
+            {
+                Functions.nfc_init(out var nfcContext);
+                var nfcDevice = Functions.nfc_open(nfcContext, "pn532_i2c:/dev/i2c-1");
+                _logger.LogGuardRailInformation($"Opened: {nfcDevice.ToJson()}");
+                _logger.LogGuardRailInformation("Polling");
+                var stopwatch = Stopwatch.StartNew();
+                nfc_modulation[] nfcModulations = [
+                    new nfc_modulation
                     {
-                        var nfcAutoPollData = new NfcAutoPollData(_pn532.AutoPoll(5, 300, new[] { PollingType.Passive106kbpsISO144443_4A, PollingType.Passive106kbpsISO144443_4B }));
-                        _logger.LogGuardRailInformation($"Has Targets: {nfcAutoPollData.HasTargets}, Num tags: {nfcAutoPollData.NumberOfTargets}, Type: {nfcAutoPollData.TargetType}");
-                        if (nfcAutoPollData.HasTargets)
-                        {
-                            switch (nfcAutoPollData.TargetType)
-                            {
-                                case PollingType.GenericPassive106kbps:
-                                    break;
-                                case PollingType.GenericPassive212kbps:
-                                    break;
-                                case PollingType.GenericPassive424kbps:
-                                    break;
-                                case PollingType.Passive106kbps:
-                                    break;
-                                case PollingType.InnovisionJewel:
-                                    break;
-                                case PollingType.MifareCard:
-                                    break;
-                                case PollingType.Felica212kbps:
-                                    break;
-                                case PollingType.Felica424kbps:
-                                    break;
-                                case PollingType.Passive106kbpsISO144443_4A:
-                                {
-                                    var card = _pn532.TryDecode106kbpsTypeA(nfcAutoPollData.CardData);
-                                    if (card is null)
-                                    {
-                                        Debug.WriteLine("Can't read properly the card");
-                                        return;
-                                    }
-
-                                    // Create the Mifare card
-                                    var mifareCard = new MifareCard(_pn532, card.TargetNumber) { BlockNumber = 0, Command = MifareCardCommand.AuthenticationA };
-                                    mifareCard.SetCapacity(card.Atqa, card.Sak);
-                                    mifareCard.SerialNumber = card.NfcId;
-                                    // Read an extract the NDEF message
-                                    // This is where you can write as well, format the card, check the card see next sections
-                                    mifareCard.TryReadNdefMessage(out var message);
-
-                                    if (message.Records.Count == 0)
-                                    {
-                                        Debug.WriteLine("Sorry, there is no NDEF message in this card or I can't find them");
-                                    }
-
-                                    // Display the messages
-                                    foreach (var msg in message.Records)
-                                    {
-                                        Debug.WriteLine("Record header:");
-                                        Debug.WriteLine($"  Is first message: {msg.Header.IsFirstMessage}, is last message: {msg.Header.IsLastMessage}");
-                                        Debug.Write($"  Type name format: {msg.Header.TypeNameFormat}");
-                                        if (msg.Header.PayloadType != null)
-                                        {
-                                            Debug.WriteLine($", Payload type: {BitConverter.ToString(msg.Header.PayloadType)}");
-                                        }
-                                        else
-                                        {
-                                            Debug.WriteLine("");
-                                        }
-
-                                        Debug.WriteLine($"  Is composed: {msg.Header.IsComposedMessage}, is Id present: {msg.Header.MessageFlag.HasFlag(MessageFlag.IdLength)}, Id Length value: {msg.Header.IdLength}");
-                                        Debug.WriteLine($"  Payload Length: {msg.Payload?.Length}, is short message= {msg.Header.MessageFlag.HasFlag(MessageFlag.ShortRecord)}");
-
-                                        if (msg.Payload != null)
-                                        {
-                                            Debug.WriteLine($"Payload: {BitConverter.ToString(msg.Payload)}");
-                                        }
-                                        else
-                                        {
-                                            Debug.WriteLine("No payload");
-                                        }
-
-                                        if (UriRecord.IsUriRecord(msg))
-                                        {
-                                            var urirec = new UriRecord(msg);
-                                            Debug.WriteLine($"  Type {nameof(UriRecord)}, Uri Type: {urirec.UriType}, Uri: {urirec.Uri}, Full URI: {urirec.FullUri}");
-                                        }
-
-                                        if (TextRecord.IsTextRecord(msg))
-                                        {
-                                            var txtrec = new TextRecord(msg);
-                                            Debug.WriteLine($"  Type: {nameof(TextRecord)}, Encoding: {txtrec.Encoding}, Language: {txtrec.LanguageCode}, Text: {txtrec.Text}");
-                                        }
-
-                                        if (GeoRecord.IsGeoRecord(msg))
-                                        {
-                                            var geo = new GeoRecord(msg);
-                                            Debug.WriteLine($"  Type: {nameof(GeoRecord)}, Lat: {geo.Latitude}, Long: {geo.Longitude}");
-                                        }
-
-                                        if (MediaRecord.IsMediaRecord(msg))
-                                        {
-                                            var media = new MediaRecord(msg);
-                                            Debug.WriteLine($"  Type: {nameof(MediaRecord)}, Payload Type = {media.PayloadType}");
-                                            if (media.IsTextType)
-                                            {
-                                                var ret = media.TryGetPayloadAsText(out var payloadAsText);
-                                                if (ret)
-                                                {
-                                                    Debug.WriteLine($"    Payload as Text:");
-                                                    Debug.WriteLine($"{payloadAsText}");
-                                                }
-                                                else
-                                                {
-                                                    Debug.WriteLine($"Can't convert the payload as a text");
-                                                }
-                                            }
-                                        }
-
-                                        Debug.WriteLine("");
-                                    }
-                                    break;
-                                }
-                                case PollingType.Passive106kbpsISO144443_4B:
-                                {
-                                    var decrypted = _pn532.TryDecodeData106kbpsTypeB(nfcAutoPollData.CardData);
-                                    if (decrypted is null)
-                                    {
-                                        Debug.WriteLine("Can't read properly the card");
-                                        return;
-                                    }
-
-                                    _logger.LogGuardRailInformation(
-                                        $"{decrypted.TargetNumber}, Serial: {BitConverter.ToString(decrypted.NfcId)}, App Data: {BitConverter.ToString(decrypted.ApplicationData)}, " +
-                                        $"{decrypted.ApplicationType}, Bit Rates: {decrypted.BitRates}, CID {decrypted.CidSupported}, Command: {decrypted.Command}, FWT: {decrypted.FrameWaitingTime}, " +
-                                        $"ISO144443 compliance: {decrypted.ISO14443_4Compliance}, Max Frame size: {decrypted.MaxFrameSize}, NAD: {decrypted.NadSupported}");
-
-                                    var creditCard = new CreditCard(_pn532, decrypted.TargetNumber);
-                                    creditCard.ReadCreditCardInformation();
-
-                                    _logger.LogGuardRailInformation("All Tags for the Credit Card:");
-                                    DisplayTags(creditCard.Tags, 0);
-                                    break;
-                                }
-                                case PollingType.DepPassive106kbps:
-                                    break;
-                                case PollingType.DepPassive212kbps:
-                                    break;
-                                case PollingType.DepPassive424kbps:
-                                    break;
-                                case PollingType.DepActive106kbps:
-                                    break;
-                                case PollingType.DepActive212kbps:
-                                    break;
-                                case PollingType.DepActive424kbps:
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
+                        nmt = nfc_modulation_type.NMT_ISO14443A,
+                        nbr = nfc_baud_rate.NBR_106
+                    },
+                    new nfc_modulation
+                    {
+                        nmt = nfc_modulation_type.NMT_ISO14443B,
+                        nbr = nfc_baud_rate.NBR_106
+                    },
+                    new nfc_modulation
+                    {
+                        nmt = nfc_modulation_type.NMT_FELICA,
+                        nbr = nfc_baud_rate.NBR_212
+                    },
+                    new nfc_modulation
+                    {
+                        nmt = nfc_modulation_type.NMT_FELICA,
+                        nbr = nfc_baud_rate.NBR_424
+                    },
+                    new nfc_modulation
+                    {
+                        nmt = nfc_modulation_type.NMT_JEWEL,
+                        nbr = nfc_baud_rate.NBR_106
+                    },
+                    new nfc_modulation
+                    {
+                        nmt = nfc_modulation_type.NMT_ISO14443BI,
+                        nbr = nfc_baud_rate.NBR_106
                     }
-                },
-                _cancellationTokenSource.Token,
-                TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+                ];
+                var modulationsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(nfc_modulation)) * nfcModulations.Length);
+                Marshal.StructureToPtr(nfcModulations, modulationsPtr, true);
+                var result = Functions.nfc_initiator_poll_target(
+                    nfcDevice,
+                    modulationsPtr,
+                    (uint)nfcModulations.Length,
+                    1,
+                    1,
+                    out var nfcTarget);
+                stopwatch.Stop();
+                _logger.LogGuardRailInformation($"Polled ({result}): {stopwatch.Elapsed:c}");
+                if (result < 0)
+                {
+                    Functions.nfc_perror(
+                        nfcDevice,
+                        "nfc_initiator_poll_target");
+                }
+
+                Functions.str_nfc_target(out var buff, nfcTarget, true);
+                _logger.LogGuardRailInformation("nfc_target: " + (nfcTarget.Equals(default(nfc_target)) ? "default" : "new") + "~~~" + nfcTarget.ToJson());
+                _logger.LogGuardRailInformation("buffer: " + buff);
+                using var device = _i2CBus.CreateDevice(0x70);
+                while (!_cancellationTokenSource.IsCancellationRequested)
+                {
+                    var buffer = new Span<byte>(new byte[64]);
+                    device.Read(
+                        buffer);
+                    _logger.LogGuardRailInformation(Encoding.UTF8.GetString(buffer));
+                }
+            },
+            _cancellationTokenSource.Token,
+            TaskCreationOptions.LongRunning,
+            TaskScheduler.Default);
         return ValueTask.CompletedTask;
     }
 
-    private static string AddSpace(int level)
-    {
-        var space = string.Empty;
-        for (var i = 0; i < level; i++)
-        {
-            space += "  ";
-        }
-
-        return space;
-    }
-
-    private void DisplayTags(List<Tag> tagToDisplay, int levels)
-    {
-        foreach (var tagParent in tagToDisplay)
-        {
-            Console.Write(AddSpace(levels) + $"{tagParent.TagNumber:X4}-{TagList.Tags.FirstOrDefault(m => m.TagNumber == tagParent.TagNumber)?.Description}");
-            var isTemplate = TagList.Tags.FirstOrDefault(m => m.TagNumber == tagParent.TagNumber);
-            if (isTemplate?.IsTemplate == true || isTemplate?.IsConstructed == true)
-            {
-                _logger.LogGuardRailInformation(string.Empty);
-                DisplayTags(tagParent.Tags, levels + 1);
-            }
-            else if (isTemplate?.IsDol == true)
-            {
-                // In this case, all the data inside are 1 byte only
-                _logger.LogGuardRailInformation(", Data Object Length elements:");
-                foreach (var dt in tagParent.Tags)
-                {
-                    Console.Write(AddSpace(levels + 1) + $"{dt.TagNumber:X4}-{TagList.Tags.FirstOrDefault(m => m.TagNumber == dt.TagNumber)?.Description}");
-                    _logger.LogGuardRailInformation($", data length: {dt.Data[0]}");
-                }
-            }
-            else
-            {
-                var tg = new TagDetails(tagParent);
-                _logger.LogGuardRailInformation($": {tg}");
-            }
-        }
-    }
-
     public event Func<string, CancellationToken, ValueTask>? Submit;
+
+    public int pn53x_initiator_poll_target(
+        nfc_device pnd,
+        nfc_modulation[] pnmModulations,
+        int szModulations,
+        byte uiPollNr,
+        byte uiPeriod,
+        ref nfc_target pnt)
+    {
+        int res = 0;
+        int szTargetTypes = 0;
+        PN53xTargetType[] apttTargetTypes = new PN53xTargetType[32];
+        Array.Fill(apttTargetTypes, PN53xTargetType.PTT_UNDEFINED);
+
+        for (int n = 0; n < szModulations; n++)
+        {
+            PN53xTargetType ptt = PN53xNMToPTT(pnmModulations[n]);
+
+            if (ptt == PN53xTargetType.PTT_UNDEFINED)
+            {
+                pnd.last_error = (int) NFCErrorCode.NFC_EINVARG;
+                return pnd.last_error;
+            }
+
+            apttTargetTypes[szTargetTypes] = ptt;
+
+            if (pnd.bAutoIso14443_4 && ptt == PN53xTargetType.PTT_MIFARE)
+            {
+                apttTargetTypes[szTargetTypes] = PN53xTargetType.PTT_ISO14443_4A_106;
+                szTargetTypes++;
+                apttTargetTypes[szTargetTypes] = PN53xTargetType.PTT_MIFARE;
+            }
+
+            szTargetTypes++;
+        }
+
+        nfc_target[] ntTargets = new nfc_target[2];
+
+        if ((res = pn53x_InAutoPoll(pnd, apttTargetTypes, szTargetTypes, uiPollNr, uiPeriod, ntTargets, 0)) < 0)
+            return res;
+
+        switch (res)
+        {
+            case 0:
+                return pnd.last_error = (int) NFCErrorCode.NFC_SUCCESS;
+            case 1:
+                pnt = ntTargets[0];
+                if (pn53x_current_target_new(pnd, ref pnt) == null)
+                {
+                    return pnd.last_error = (int) NFCErrorCode.NFC_ESOFT;
+                }
+
+                return res;
+            case 2:
+                pnt = ntTargets[1];
+                if (pn53x_current_target_new(pnd, ref pnt) == null)
+                {
+                    return pnd.last_error = (int) NFCErrorCode.NFC_ESOFT;
+                }
+
+                return res;
+            default:
+                return (int) NFCErrorCode.NFC_ECHIP;
+        }
+
+        return (int) NFCErrorCode.NFC_ECHIP;
+    }
+
+    public IntPtr pn53x_current_target_new(nfc_device pnd, ref nfc_target pnt)
+    {
+        // Keep the current nfc_target for further commands
+        if (pnd.chip_data.CurrentTarget != null)
+        {
+            Marshal.FreeHGlobal(Marshal.UnsafeAddrOfPinnedArrayElement(pnd.chip_data.CurrentTarget.Data, 0));
+        }
+
+        pnd.chip_data.CurrentTarget = new nfc_target()
+        {
+            Data = new byte[pnt.Data.Length]
+        };
+
+        Marshal.Copy(pnt.Data, 0, Marshal.UnsafeAddrOfPinnedArrayElement(pnd.chip_data.CurrentTarget.Data, 0), pnt.Data.Length);
+
+        return Marshal.UnsafeAddrOfPinnedArrayElement(pnd.chip_data.CurrentTarget.Data, 0);
+    }
+
+    public enum PN53xTargetType
+    {
+        PTT_UNDEFINED,
+        PTT_MIFARE,
+        PTT_ISO14443_4A_106,
+        // Add other possible target types
+    }
+
+    public enum NFCErrorCode
+    {
+        NFC_SUCCESS,
+        NFC_EINVARG,
+        NFC_ESOFT,
+        NFC_ETIMEOUT,
+        NFC_ECHIP,
+        // Add other possible error codes
+    }
 
     public ValueTask DisposeAddressAsync(
         string address)
     {
         _cancellationTokenSource.Cancel();
         _listener?.Dispose();
-        _pn532?.Dispose();
+        _i2CBus?.Dispose();
         return ValueTask.CompletedTask;
-    }
-
-    private readonly ref struct NfcAutoPollData
-    {
-        private readonly Span<byte> _rawData;
-
-        internal NfcAutoPollData(
-            Span<byte> data)
-        {
-            _rawData = data;
-        }
-
-        internal bool HasTargets => _rawData.Length >= 3;
-
-        internal int NumberOfTargets => _rawData[0];
-
-        internal PollingType TargetType => (PollingType)_rawData[1];
-
-        internal int LengthOfData => _rawData[2];
-
-        internal Span<byte> CardData => _rawData[3..];
     }
 }

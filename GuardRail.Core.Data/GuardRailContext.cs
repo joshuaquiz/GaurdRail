@@ -28,6 +28,11 @@ public class GuardRailContext : DbContext
     public DbSet<Log> Logs { get; set; }
 
     /// <summary>
+    /// The <see cref="UnlockAccessToken"/>s in the database.
+    /// </summary>
+    public DbSet<UnlockAccessToken> UnlockAccessTokens { get; set; }
+
+    /// <summary>
     /// The <see cref="User"/>s in the database.
     /// </summary>
     public DbSet<User> Users { get; set; }

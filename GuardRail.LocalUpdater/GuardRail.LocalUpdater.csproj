@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <OutputType>exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>GuardRail.LocalUpdater.App</StartupObject>
     <ApplicationIcon>logo_icon.ico</ApplicationIcon>
@@ -20,12 +19,10 @@
     <AssemblyName>GuardRailUpdater</AssemblyName>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>GuardRailUpdater.xml</DocumentationFile>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Assets\logo.png" />
     <None Remove="Assets\logo_icon.ico" />
@@ -37,19 +34,15 @@
     <None Remove="Assets\teko-semibold.ttf" />
     <None Remove="logo.png" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\GuardRail.Core\GuardRail.Core.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\logo.png" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\logo_icon.ico" />
     <Resource Include="Assets\logo_icon.png">
@@ -82,5 +75,4 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-
 </Project>

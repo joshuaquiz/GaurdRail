@@ -399,7 +399,7 @@
             An EntityFrameWork IDataSink implementation.
             </summary>
         </member>
-        <member name="M:GuardRail.LocalClient.Data.Local.EntityFrameWorkDataSink.#ctor(GuardRail.LocalClient.Data.Local.GuardRailContext)">
+        <member name="M:GuardRail.LocalClient.Data.Local.EntityFrameWorkDataSink.#ctor(GuardRail.Core.Data.GuardRailContext)">
             <summary>
             Creates an EntityFrameWorkDataSink.
             </summary>
@@ -427,262 +427,6 @@
         </member>
         <member name="M:GuardRail.LocalClient.Data.Local.EntityFrameWorkDataSink.Dispose">
             <inheritdoc />
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Local.GuardRailContext">
-            <summary>
-            The EF core context.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.Accounts">
-            <summary>
-            The accounts.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.Users">
-            <summary>
-            The users.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.AccessPoints">
-            <summary>
-            The access points.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.AccessPointGroups">
-            <summary>
-            The access point groups.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.Devices">
-            <summary>
-            The devices.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.Doors">
-            <summary>
-            The doors.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Local.GuardRailContext.UserGroups">
-            <summary>
-            The user groups.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Local.GuardRailContext.#ctor">
-            <summary>
-            The EF core context.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Local.GuardRailContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{GuardRail.LocalClient.Data.Local.GuardRailContext})">
-            <summary>
-            The EF core context.
-            </summary>
-            <param name="dbContextOptions">The context options.</param>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Local.GuardRailContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
-            <summary>
-            OnConfiguring event.
-            </summary>
-            <param name="options">The context options builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.AccessPoint">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPoint.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPoint.Door">
-            <summary>
-            The door attached to this access point.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPoint.Users">
-            <summary>
-            The users with direct access.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPoint.UserGroups">
-            <summary>
-            The UserGroups this access point is linked to.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPoint.AccessPointGroups">
-            <summary>
-            The AccessPointGroups this access point is linked to.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.AccessPoint.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.AccessPointGroup">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPointGroup.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPointGroup.Users">
-            <summary>
-            The users in the group.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPointGroup.AccessPoints">
-            <summary>
-            The AccessPoints the group has direct access to.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.AccessPointGroup.UserGroups">
-            <summary>
-            The UserGroups the user group has access to.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.AccessPointGroup.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.Account">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Account.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Account.Users">
-            <summary>
-            Users on the account.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.Account.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.Device">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Device.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Device.User">
-            <summary>
-            The user that owns the device.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.Device.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.Door">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Door.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Door.AccessPointId">
-            <summary>
-            The ID for the related access point.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.Door.AccessPoint">
-            <summary>
-            The AccessPoint linked to the door.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.Door.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.User">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.Account">
-            <summary>
-            The account the user is in.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.Devices">
-            <summary>
-            The devices a user has.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.AccessPoints">
-            <summary>
-            The AccessPoints a user has direct access to.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.UserGroups">
-            <summary>
-            The UserGroups a user is in.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.User.AccessPointGroups">
-            <summary>
-            The AccessPointGroups a user has access to.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.User.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.User.GetSearchString">
-            <summary>
-            Returns a string that contains text that can be searched against.
-            </summary>
-            <returns>string</returns>
-        </member>
-        <member name="T:GuardRail.LocalClient.Data.Models.UserGroup">
-            <inheritdoc />
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.UserGroup.Id">
-            <summary>
-            The ID used for EF.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.UserGroup.Users">
-            <summary>
-            The users in the group.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.UserGroup.AccessPoints">
-            <summary>
-            The AccessPoints the group has direct access to.
-            </summary>
-        </member>
-        <member name="P:GuardRail.LocalClient.Data.Models.UserGroup.AccessPointGroups">
-            <summary>
-            The AccessPointGroups the user group has access to.
-            </summary>
-        </member>
-        <member name="M:GuardRail.LocalClient.Data.Models.UserGroup.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <summary>
-            EF creation helper.
-            </summary>
-            <param name="builder">EF model builder.</param>
         </member>
         <member name="T:GuardRail.LocalClient.Data.Remote.RemoteDataSink">
             <summary>
@@ -922,6 +666,36 @@
             <param name="commandLineArguments">Command line arguments passed to the main app.</param>
             <param name="mainWindow">The application's main window.</param>
             <param name="cancellationToken">The cancellation token.</param>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
         </member>
     </members>
 </doc>

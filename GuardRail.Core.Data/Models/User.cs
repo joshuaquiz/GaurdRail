@@ -28,7 +28,7 @@ public class User : IAddableItem, IAccountItem
     /// The user's password.
     /// </summary>
     [Required]
-    public byte[] Password { get; set; } = Array.Empty<byte>();
+    public byte[] Password { get; set; } = [];
 
     /// <summary>
     /// The next time the users password will expire.

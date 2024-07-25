@@ -43,6 +43,18 @@ public class Door : IAddableItem, IAccountItem
     public bool IsConfigured { get; set; } = false;
 
     /// <summary>
+    /// The latitude of the door.
+    /// </summary>
+    [Required]
+    public double Latitude { get; set; }
+
+    /// <summary>
+    /// The longitude of the door.
+    /// </summary>
+    [Required]
+    public double Longitude { get; set; }
+
+    /// <summary>
     /// The Guid of the <see cref="AccessPoint"/>.
     /// </summary>
     [Required]

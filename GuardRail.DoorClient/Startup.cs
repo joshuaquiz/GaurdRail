@@ -16,9 +16,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Serilog;
-using Serilog.Exceptions;
 
 namespace GuardRail.DoorClient;
 
@@ -33,11 +32,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(Configuration)
-            .Enrich.FromLogContext()
-            .Enrich.WithExceptionDetails()
-            .CreateLogger();
+        services.AddLogging(
+            x => x.AddConsole());
         services.AddControllers();
         services.AddHealthChecks();
         services.AddSwaggerGen(c =>

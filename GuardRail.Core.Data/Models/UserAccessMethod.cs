@@ -31,7 +31,7 @@ public class UserAccessMethod : IAddableItem, IAccountItem
     /// This can be a phone ID, a pass-code, RFID, etc.
     /// </remarks>
     [Required]
-    public byte[] Data { get; set; } = Array.Empty<byte>();
+    public byte[] Data { get; set; } = [];
 
     /// <summary>
     /// The Guid of the <see cref="Models.User"/>.

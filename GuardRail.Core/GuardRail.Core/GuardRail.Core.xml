@@ -241,6 +241,13 @@
             <param name="str">The value to use.</param>
             <returns>bool</returns>
         </member>
+        <member name="M:GuardRail.Core.Helpers.Extensions.IsNullOrEmpty(System.String)">
+            <summary>
+            Extension for IsNullOrEmpty.
+            </summary>
+            <param name="str">The value to use.</param>
+            <returns>bool</returns>
+        </member>
         <member name="M:GuardRail.Core.Helpers.Extensions.GetBytes(System.String)">
             <summary>
             Gets the UTF8 encoded bytes from the provided text.
@@ -323,6 +330,60 @@
         <member name="M:GuardRail.Core.Helpers.VersionConverter.CanConvert(System.Type)">
             <inheritdoc/>
         </member>
+        <member name="T:GuardRail.Core.Validator">
+            <summary>
+            Validation extensions.
+            </summary>
+        </member>
+        <member name="M:GuardRail.Core.Validator.PhoneNumberRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^(?&lt;CountryCode&gt;\\+?\\d{1,2}|1)?[-. (]*(?&lt;AreaCode&gt;[2-9](?!11)\\d{2})[-. )]*(?&lt;ExchangeCode&gt;\\d{3})[-. ]*(?&lt;LineNumber&gt;\\d{4})(?: *x(\\d+))?$</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Optional (greedy).<br/>
+                ○ "CountryCode" capture group.<br/>
+                    ○ Match with 2 alternative expressions.<br/>
+                        ○ Match a sequence of expressions.<br/>
+                            ○ Match '+' atomically, optionally.<br/>
+                            ○ Match a Unicode digit greedily at least 1 and at most 2 times.<br/>
+                        ○ Match '1'.<br/>
+            ○ Match a character in the set [ (-.] atomically any number of times.<br/>
+            ○ "AreaCode" capture group.<br/>
+                ○ Match a character in the set [2-9].<br/>
+                ○ Zero-width negative lookahead.<br/>
+                    ○ Match the string "11".<br/>
+                ○ Match a Unicode digit exactly 2 times.<br/>
+            ○ Match a character in the set [ )-.] atomically any number of times.<br/>
+            ○ "ExchangeCode" capture group.<br/>
+                ○ Match a Unicode digit exactly 3 times.<br/>
+            ○ Match a character in the set [ -.] atomically any number of times.<br/>
+            ○ "LineNumber" capture group.<br/>
+                ○ Match a Unicode digit exactly 4 times.<br/>
+            ○ Optional (greedy).<br/>
+                ○ Match ' ' atomically any number of times.<br/>
+                ○ Match 'x'.<br/>
+                ○ 1st capture group.<br/>
+                    ○ Match a Unicode digit greedily at least once.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:GuardRail.Core.Validator.IsValidPhoneFormat(System.String)">
+            <summary>
+            Validates that the string is formatted as a valid phone number.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:GuardRail.Core.Validator.IsValidEmailFormat(System.String)">
+            <summary>
+            Validates that the string is formatted as a valid email.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <returns>bool</returns>
+        </member>
         <member name="T:GuardRail.Core.InstallConfiguration">
             <summary>
             The configuration for an update/install.
@@ -386,24 +447,64 @@
             The ID of the request.
             </summary>
         </member>
-        <member name="T:GuardRail.Core.Validator">
-            <summary>
-            Validation extensions.
-            </summary>
+        <member name="T:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the PhoneNumberRegex method.</summary>
         </member>
-        <member name="M:GuardRail.Core.Validator.IsValidPhoneFormat(System.String)">
-            <summary>
-            Validates that the string is formatted as a valid phone number.
-            </summary>
-            <param name="value">The value to validate.</param>
-            <returns>bool</returns>
+        <member name="F:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
         </member>
-        <member name="M:GuardRail.Core.Validator.IsValidEmailFormat(System.String)">
-            <summary>
-            Validates that the string is formatted as a valid email.
-            </summary>
-            <param name="value">The value to validate.</param>
-            <returns>bool</returns>
+        <member name="M:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PhoneNumberRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPop(System.Int32[],System.Int32@,System.Int32@,System.Int32@)">
+            <summary>Pops 2 values from the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32)">
+            <summary>Pushes 1 value onto the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
+            <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32,System.Int32)">
+            <summary>Pushes 3 values onto the backtracking stack.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_16100000000000000000000">
+            <summary>Supports searching for characters in or not in " (-.".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_ascii_16200000000000000000000">
+            <summary>Supports searching for characters in or not in " )-.".</summary>
         </member>
     </members>
 </doc>

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GuardRail.Core.CommandLine;
+using GuardRail.Core.Data;
 using GuardRail.Core.Helpers;
 using GuardRail.LocalClient.Data.Local;
 using Microsoft.EntityFrameworkCore;

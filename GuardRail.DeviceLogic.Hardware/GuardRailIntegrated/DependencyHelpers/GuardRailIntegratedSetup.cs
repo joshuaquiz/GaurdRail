@@ -6,6 +6,7 @@ using GuardRail.DeviceLogic.Hardware.GuardRailIntegrated.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Device.Gpio;
+using GuardRail.DeviceLogic.Hardware.GuardRailIntegrated.Input.Nfc;
 
 namespace GuardRail.DeviceLogic.Hardware.GuardRailIntegrated.DependencyHelpers;
 
@@ -23,7 +24,7 @@ public static class GuardRailIntegratedSetup
             .AddBuzzer<BuzzerConfiguration, int, BuzzerHardwareManager, BuzzerManager>(configuration)
             .AddLight<LightConfiguration, int, LightHardwareManager, LightManager>(configuration)
             .AddKeypad<KeypadConfiguration, int, KeypadHardwareManager, KeypadInput>(configuration)
-            //.AddNfc<NfcConfiguration, NfcHardwareManager, NfcInput>(Configuration)
+            .AddNfc<NfcConfiguration, NfcHardwareManager, NfcInput>(configuration)
             .AddEmptyNfc()
             .AddEmptyScreen()
             .AddEmptyDoor();
