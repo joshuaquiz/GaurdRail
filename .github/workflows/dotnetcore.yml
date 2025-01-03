@@ -11,6 +11,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - name: Install .NET MAUI
+      shell: pwsh
+      run: dotnet workload install maui --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json --source https://api.nuget.org/v3/index.json
+    - name: Workload update
+      run: dotnet workload update
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
