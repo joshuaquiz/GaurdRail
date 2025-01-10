@@ -1,4 +1,5 @@
 ﻿using System;
+using GuardRail.Core.Models.Enums;
 
 namespace GuardRail.Core.Models.Models;
 
@@ -12,7 +13,7 @@ public class AccessPoint
     /// Guid is to be used in all systems for the global ID.
     /// This value is set automatically and should not be passed in for adds.
     /// </summary>
-    public required Guid Guid { get; set; }
+    public Guid Guid { get; set; }
 
     /// <summary>
     /// The ID of the location.
@@ -23,6 +24,11 @@ public class AccessPoint
     /// The AP's friendly name.
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// The type of the access point.
+    /// </summary>
+    public required AccessPointType AccessPointType { get; set; }
 
     /// <summary>
     /// The latitude of this AP.

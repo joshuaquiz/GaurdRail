@@ -60,6 +60,52 @@ public class GhControllerBase<TController>(
         }
     }
 
+    public ApiResult<T> GhWrappedApiCall<T>(
+        Func<T> function,
+        IReadOnlyDictionary<Type, Func<Exception, ILogger<TController>, ApiResult<T>>>? extraErrorHandlers = null)
+    {
+        try
+        {
+            var result = function();
+            return Ok(
+                result);
+        }
+        catch (GuardRailExceptionBase e)
+        {
+            if (extraErrorHandlers?.TryGetValue(
+                    e.GetType(),
+                    out var errorHandler) == true)
+            {
+                return errorHandler(
+                    e,
+                    Logger);
+            }
+
+            Logger.LogError(
+                e,
+                e.Message);
+            return Error<T>(
+                e.ExternalMessage);
+        }
+        catch (Exception e)
+        {
+            if (extraErrorHandlers?.TryGetValue(
+                    e.GetType(),
+                    out var errorHandler) == true)
+            {
+                return errorHandler(
+                    e,
+                    Logger);
+            }
+
+            Logger.LogError(
+                e,
+                e.Message);
+            return Error<T>(
+                e.Message);
+        }
+    }
+
     public async Task<ApiResult<T>> GhWrappedApiCall<T>(
         Func<Task<T>> function,
         IReadOnlyDictionary<Type, Func<Exception, ILogger<TController>, ApiResult<T>>>? extraErrorHandlers = null)

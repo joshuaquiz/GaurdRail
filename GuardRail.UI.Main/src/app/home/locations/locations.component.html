@@ -1,0 +1,132 @@
+<div>
+  <div class="options">
+    <ul>
+      <li>
+        <div></div>
+        <span>
+          Add New Location
+        </span>
+      </li>
+      <li *ngIf="SingleItemSelected">
+        <div></div>
+        <span>
+          Edit
+        </span>
+      </li>
+      <li *ngIf="SingleItemSelected || MultipleItemsSelected">
+        <div></div>
+        <span>
+          Delete
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div class="list">
+    <div *ngFor="let l in Locations">
+      <location-item Location="l"></location-item>
+    </div>
+  </div>
+</div>
+<dialog Buttons="AddButtons">
+  <div>
+    <label>
+      <span>
+        Name
+      </span>
+      <input type="text" value="{CreateLocationRequest.Name}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Description
+      </span>
+      <input type="text" value="{CreateLocationRequest.Description}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Latitude
+      </span>
+      <input type="number" value="{CreateLocationRequest.Latitude}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Longitude
+      </span>
+      <input type="number" value="{CreateLocationRequest.Longitude}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        GeoFenceDistance
+      </span>
+      <input type="number" value="{CreateLocationRequest.GeoFenceDistance}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        IsMobile
+      </span>
+      <input type="checkbox" value="{CreateLocationRequest.IsMobile}" />
+    </label>
+  </div>
+</dialog>
+<dialog *ngIf="EditingSingle" Buttons="EditSingleButtons">
+  <div>
+    <label>
+      <span>
+        Name
+      </span>
+      <input type="text" value="{CreateLocationRequest.Name}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Description
+      </span>
+      <input type="text" value="{CreateLocationRequest.Description}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Latitude
+      </span>
+      <input type="number" value="{CreateLocationRequest.Latitude}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        Longitude
+      </span>
+      <input type="number" value="{CreateLocationRequest.Longitude}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        GeoFenceDistance
+      </span>
+      <input type="number" value="{CreateLocationRequest.GeoFenceDistance}" />
+    </label>
+  </div>
+  <div>
+    <label>
+      <span>
+        IsMobile
+      </span>
+      <input type="checkbox" value="{CreateLocationRequest.IsMobile}" />
+    </label>
+  </div>
+</dialog>
+<dialog *ngIf="Deleting" Buttons="DeleteButtons">
+  Would you like to delete these item(s)?
+</dialog>

@@ -36,6 +36,8 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "GuardRail.UI.Main", "GuardR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuardRail.Local.Updater", "GuardRail.Local.Updater\GuardRail.Local.Updater.csproj", "{AEDE0DA4-659F-4FFF-B066-F255846DF565}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "GuardRail.UI.Public", "GuardRail.UI.Public\GuardRail.UI.Public.esproj", "{DDB439AD-C43F-419C-955D-DD6C186EC1FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,12 @@ Global
 		{AEDE0DA4-659F-4FFF-B066-F255846DF565}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEDE0DA4-659F-4FFF-B066-F255846DF565}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEDE0DA4-659F-4FFF-B066-F255846DF565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDB439AD-C43F-419C-955D-DD6C186EC1FE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

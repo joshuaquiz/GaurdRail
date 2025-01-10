@@ -7,7 +7,7 @@ namespace GuardRail.Api.Main.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class VersionController(
+public sealed class VersionController(
     IVersionManagementService versionManagementService,
     ILogger<VersionController> logger)
     : GhControllerBase<VersionController>(

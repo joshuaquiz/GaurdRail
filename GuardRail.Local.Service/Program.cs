@@ -12,6 +12,7 @@ public static class Program
             args);
         builder.Services.AddWindowsService();
         builder.Services.AddHostedService<AutoUpdateCheckerWorker>();
+        builder.Services.AddHostedService<DataSyncWorker>();
         builder.Services.AddHostedService<UdpPingListenerWorker>();
         var host = builder.Build();
         host.Run();

@@ -1,4 +1,5 @@
 using GuardRail.Api.Models;
+using GuardRail.Api.Models.Requests;
 using GuardRail.Core.Models.Exceptions;
 using GuardRail.Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace GuardRail.Api.Main.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController(
+public sealed class UserController(
     IUserManagementService userManagementService,
     ILogger<UserController> logger)
     : GhControllerBase<UserController>(
@@ -70,4 +71,20 @@ public class UserController(
                     }
                 }
             });
+
+    [HttpPost(Name = nameof(CreateNewUser))]
+    public async Task<ApiResult> CreateNewUser(
+        [FromBody]
+        CreateNewUserRequest createNewUserRequest,
+        CancellationToken cancellationToken) =>
+        await GhWrappedApiCall(
+            async () =>
+                await userManagementService.CreateNewUser(
+                    createNewUserRequest.AccountId,
+                    createNewUserRequest.FirstName,
+                    createNewUserRequest.LastName,
+                    createNewUserRequest.Phone,
+                    createNewUserRequest.Email,
+                    createNewUserRequest.UserType,
+                    cancellationToken));
 }

@@ -7,7 +7,7 @@ namespace GuardRail.Api.Main.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AccountController(
+public sealed class AccountController(
     IAccountManagementService accountManagementService,
     ILogger<AccountController> logger)
     : GhControllerBase<AccountController>(
@@ -20,13 +20,11 @@ public class AccountController(
         CancellationToken cancellationToken) =>
         await GhWrappedApiCall(
             async () =>
-            {
                 await accountManagementService.CreateNewAccount(
                     createNewAccountRequest.AccountName,
                     createNewAccountRequest.FirstName,
                     createNewAccountRequest.LastName,
                     createNewAccountRequest.Phone,
                     createNewAccountRequest.Email,
-                    cancellationToken);
-            });
+                    cancellationToken));
 }

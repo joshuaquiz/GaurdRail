@@ -11,6 +11,6 @@ namespace GuardRail.Api.Models.Responses;
 /// <param name="DownloadUrl">The url do download the new version, only provided if not the latest.</param>
 public sealed record VersionCheckResponse(
     bool IsLatest,
-    bool IsUpdateRequired,
+    bool? IsUpdateRequired,
     Version? LatestVersion,
     Uri? DownloadUrl);
