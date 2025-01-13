@@ -13,6 +13,11 @@ import { NavBarComponent } from './home/nav-bar/nav-bar.component';
 import { DialogComponent } from './shared/dialog/dialog.component';
 import { LocationItemComponent } from './shared/location-item/location-item.component';
 
+import { InputBaseComponent } from './shared/input/input-base/input-base.component';
+import { TextInputComponent } from './shared/input/text-input/text-input.component';
+import { PasswordInputComponent } from './shared/input/password-input/password-input.component';
+import { NumberInputComponent } from './shared/input/number-input/number-input.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +28,11 @@ import { LocationItemComponent } from './shared/location-item/location-item.comp
     UsersComponent,
     NavBarComponent,
     DialogComponent,
-    LocationItemComponent
+    LocationItemComponent,
+    InputBaseComponent,
+    TextInputComponent,
+    PasswordInputComponent,
+    NumberInputComponent
   ],
   imports: [
     BrowserModule,

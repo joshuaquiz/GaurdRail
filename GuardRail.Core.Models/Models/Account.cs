@@ -18,4 +18,9 @@ public class Account
     /// The name of the account.
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Whether the account is active.
+    /// </summary>
+    public required bool IsActive { get; set; }
 }

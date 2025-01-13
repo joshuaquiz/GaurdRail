@@ -1,19 +1,23 @@
 <div>
   <div class="options">
     <ul>
-      <li>
+      <li (click)="StartAdd">
         <div></div>
         <span>
           Add New Location
         </span>
       </li>
-      <li *ngIf="SingleItemSelected">
+      <li
+        *ngIf="SingleItemSelected"
+        (click)="StartEdit">
         <div></div>
         <span>
           Edit
         </span>
       </li>
-      <li *ngIf="SingleItemSelected || MultipleItemsSelected">
+      <li
+        *ngIf="SingleItemSelected || MultipleItemsSelected"
+        (click)="StartDelete">
         <div></div>
         <span>
           Delete
@@ -27,47 +31,22 @@
     </div>
   </div>
 </div>
-<dialog Buttons="AddButtons">
-  <div>
-    <label>
-      <span>
-        Name
-      </span>
-      <input type="text" value="{CreateLocationRequest.Name}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Description
-      </span>
-      <input type="text" value="{CreateLocationRequest.Description}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Latitude
-      </span>
-      <input type="number" value="{CreateLocationRequest.Latitude}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Longitude
-      </span>
-      <input type="number" value="{CreateLocationRequest.Longitude}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        GeoFenceDistance
-      </span>
-      <input type="number" value="{CreateLocationRequest.GeoFenceDistance}" />
-    </label>
-  </div>
+<dialog *ngIf="AddItem" Buttons="AddButtons">
+  <TextInput
+    Label="Name"
+    Value="CreateLocationRequest.Name"></TextInput>
+  <TextInput
+    Label="Description"
+    Value="CreateLocationRequest.Description"></TextInput>
+  <TextInput
+    Label="Name"
+    Value="CreateLocationRequest.Name"></TextInput>
+  <NumberInput
+    Label="Latitude"
+    Value="CreateLocationRequest.Latitude"></NumberInput>
+  <NumberInput
+    Label="Geo-fence Distance"
+    Value="CreateLocationRequest.GeoFenceDistance"></NumberInput>
   <div>
     <label>
       <span>
@@ -78,46 +57,21 @@
   </div>
 </dialog>
 <dialog *ngIf="EditingSingle" Buttons="EditSingleButtons">
-  <div>
-    <label>
-      <span>
-        Name
-      </span>
-      <input type="text" value="{CreateLocationRequest.Name}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Description
-      </span>
-      <input type="text" value="{CreateLocationRequest.Description}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Latitude
-      </span>
-      <input type="number" value="{CreateLocationRequest.Latitude}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        Longitude
-      </span>
-      <input type="number" value="{CreateLocationRequest.Longitude}" />
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>
-        GeoFenceDistance
-      </span>
-      <input type="number" value="{CreateLocationRequest.GeoFenceDistance}" />
-    </label>
-  </div>
+  <TextInput
+    Label="Name"
+    Value="CreateLocationRequest.Name"></TextInput>
+  <TextInput
+    Label="Description"
+    Value="CreateLocationRequest.Description"></TextInput>
+  <TextInput
+    Label="Name"
+    Value="CreateLocationRequest.Name"></TextInput>
+  <NumberInput
+    Label="Latitude"
+    Value="CreateLocationRequest.Latitude"></NumberInput>
+  <NumberInput
+    Label="Geo-fence Distance"
+    Value="CreateLocationRequest.GeoFenceDistance"></NumberInput>
   <div>
     <label>
       <span>

@@ -1,5 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using GuardRail.Core.Models.Models;
+using GuardRail.Logic.Models;
 
 namespace GuardRail.Logic.Interfaces;
 
@@ -24,5 +26,15 @@ public interface IAccountManagementService
         string lastName,
         string phone,
         string email,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets data needed for the dashboard.
+    /// </summary>
+    /// <param name="user">The user making the request.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/>.</param>
+    /// <returns>A <see cref="Task{T}"/> of <see cref="DashboardDataResponse"/> representing the work to get the dashboard data.</returns>
+    public Task<DashboardDataResponse> GetDashboardData(
+        User user,
         CancellationToken cancellationToken);
 }

@@ -1,5 +1,7 @@
 using GuardRail.Api.Models;
 using GuardRail.Api.Models.Requests;
+using GuardRail.Api.Models.Responses;
+using GuardRail.Core.Models.Models;
 using GuardRail.Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,4 +29,19 @@ public sealed class AccountController(
                     createNewAccountRequest.Phone,
                     createNewAccountRequest.Email,
                     cancellationToken));
+
+    [HttpGet(Name = nameof(GetDashboardData))]
+    public async Task<ApiResult<DashboardDataResponse>> GetDashboardData(
+        [FromHeader]
+        User user,
+        CancellationToken cancellationToken) =>
+        await GhWrappedApiCall(
+            async () =>
+            {
+                var result = await accountManagementService.GetDashboardData(
+                    user,
+                    cancellationToken);
+                return new DashboardDataResponse(
+                    result.Accounts);
+            });
 }

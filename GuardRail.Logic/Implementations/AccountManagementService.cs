@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GuardRail.Core.Models.Enums;
 using GuardRail.Core.Models.Models;
 using GuardRail.Database.Main;
 using GuardRail.Logic.Interfaces;
+using GuardRail.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuardRail.Logic.Implementations;
@@ -30,7 +32,8 @@ public sealed class AccountManagementService(
         var newAccount = await db.Accounts.AddAsync(
             new Account
             {
-                Name = accountName
+                Name = accountName,
+                IsActive = true
             },
             cancellationToken);
         await db.SaveChangesAsync(
@@ -43,5 +46,22 @@ public sealed class AccountManagementService(
             email,
             UserType.AccountAdmin,
             cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<DashboardDataResponse> GetDashboardData(
+        User user,
+        CancellationToken cancellationToken)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync(
+            cancellationToken);
+        return new DashboardDataResponse(
+            await db.Accounts
+                .Where(
+                    x =>
+                        user.UserType == UserType.SuperAdmin
+                        || x.Guid == user.AccountGuid)
+                .ToListAsync(
+                    cancellationToken));
     }
 }

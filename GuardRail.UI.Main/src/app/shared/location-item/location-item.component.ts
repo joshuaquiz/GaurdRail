@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ILocation } from '../location';
 
 @Component({
   selector: 'location-item',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './location-item.component.css'
 })
 export class LocationItemComponent {
-
+  @Input()
+  public Location: ILocation;
 }
